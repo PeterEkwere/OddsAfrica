@@ -1,112 +1,62 @@
-# OddsAfrica-API
-The is the first version of this API project with more versions coming later, The aim of this projects was to collectively cover fundamental concepts of higher level programming. The goal of The project is to eventually provide odds from all markets in each game across all the main betsites in Africa.
-If you found this Repo Helpfull please dont hesitate to drop a star🙏😌
+# OddsAfrica
 
-## Table of Content
-* [Environment](#environment)
-* [Installation](#installation)
-* [Usage](#usage)
-* [Bugs](#bugs)
-* [Authors](#authors)
-* [License](#license)
+OddsAfrica collects live odds from the major African bookmakers and looks for arbitrage across them.
 
+The idea is simple. Different books price the same match differently. When the gap is big enough you can back every outcome across a few books and come out ahead no matter who wins. That is an arbitrage, or a sure bet. OddsAfrica pulls odds from many books at once, lines them up by game and market, and points out those spots.
 
-## Environment
-This project is interpreted/tested on Windows using the GitBash cmd using Python (version 3.11.3)
+Written in Python.
 
-## Installation
-* Clone this repository: `git clone https://github.com/PeterEkwere/OddsAfrica-API.git`
-* Access OddsAfrica-API directory: `cd OddsAfrica-API`
+## What it does
 
+- Pulls odds from the major African books into one consistent format.
+- Covers football, basketball, volleyball, darts and ice hockey.
+- Finds arbitrage across books for the same game, and works out the stake split and the profit in `utils/calculate_arb`.
+- Has a small API (`api/views`) with signup and login so a client can read the odds and the arbs.
+- Logs each book on its own, so one book failing does not stop the rest of the run.
 
+## Books it reads
 
-## Usage
-There Are Two way to use this API
+Each book has its own scraper under `engine/bookie_models/`:
 
-### Example 1
+Bet9ja, BetKing, LiveScoreBet, MerryBet, NairaBet, Paripesa, SportyBet, 1xBet, bet22, Betpawa, Betwinner.
 
-```
-$ python run.py 
-```
-##### You can find the output in [bookie_storage](/engine/storage_engine/bookie_storage)
+You can turn books and sports on or off per run in `run.py`.
 
+## How it is laid out
 
-### Example 2
+| Part | Where |
+|------|-------|
+| Bookmaker scrapers | `engine/bookie_models/` |
+| Arbitrage maths | `utils/calculate_arb.py` |
+| API and auth | `api/views/` (signup, login, arbs) |
+| Runner | `run.py` |
+| Config | `config/config.py` |
 
-Import the needed bookmaker:
-```
-from engine.bookie_models.sportybet_model import SportyBet
-```
-Then Access the bookmaker
+## Running it
 
-```
-bookie = Sportybet()
-```
-
-Then get the needed games:
-Note: inorder to get the specific sport you will need to pass them as Arguments to the get_games method
-```
-data = bookie.Get_games("football").
-print(data)
+```bash
+git clone https://github.com/PeterEkwere/OddsAfrica.git
+cd OddsAfrica
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+cp config/config.example.py config/config.py   # set your own values
+python run.py
 ```
 
-#### OUTPUT
-```
-  "Australia": {
-    "A-League, Women": {
-      "Brisbane Roar FC vs Wellington Phoenix": {
-        "1X2": {
-          "1": 2.1,
-          "X": 3.6,
-          "2": 2.9
-        },
-        "Over/Under": {
-          "Over 1.5": 1.19,
-          "Under 1.5": 4.0,
-          "Over 2.5": 1.63,
-          "Under 2.5": 2.1,
-          "Over 3.5": 2.55,
-          "Under 3.5": 1.43
-        },
-        "Double Chance": {
-          "1X": 1.33,
-          "12": 1.25,
-          "X2": 1.59
-        },
-        "Handicap 0:1": {
-          "1 (0:1)": 3.75,
-          "X (0:1)": 4.0,
-          "2 (0:1)": 1.64
-        },
-        "GG/NG": {
-          "Yes": 1.54,
-          "No": 2.15
-        },
-        "Draw No Bet": {
-          "1": 1.57,
-          "2": 2.15
-        }..
-```
+Built and tested on Python 3.11.
 
-## Supported betsites and Sports
-```
-BETSITES                       SPORTS
-betpawa                        football
-bet9ja                         basketball
-paripesa                       ice Hockey
-22bet                          volleyball
-1xbet                          darts
-sportybet                      esoccer
-nairabet
-betwinner
-betking
-livescorebet
-merrybet
-```
-##### more betsites and sports comming soon...
+## Where it is going
 
-## Bugs
-No known bugs at this time. 
+This is the first version. The plan is to cover more markets in each game and more books, and to put a cleaner public API over the engine.
 
-## Authors
-Ekwere Peter - [Github](https://github.com/PeterEkwere)
+## A note on use
+
+OddsAfrica reads odds that the books already show in public, for research and comparison. Scraping and automated access can be against a book's terms, and betting rules change from place to place, so check both before pointing it at live sites or betting real money. This is for learning and research, not betting or financial advice.
+
+## Author
+
+Peter Udeme Ekwere. [GitHub](https://github.com/PeterEkwere), [LinkedIn](https://www.linkedin.com/in/peter-ekwere-9929ba257).
+
+## License
+
+See [`LICENSE`](LICENSE).
